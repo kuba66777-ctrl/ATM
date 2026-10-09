@@ -5,53 +5,56 @@ import java.util.Objects;
 
 public class Account {
 
-    private final String number;
-    private double balance;
+    private int number;
+    public double balance;
 
-    private final double openingBalance;
 
-    public Account(String number, double openingBalance) {
-             this.number = Objects.requireNonNull(number, "Numer konta nie moze byc cos tam");
-             this.openingBalance = 0;
-             Objects.requireNonNull(openingBalance, "Saldo początkowe nie moze byc cos tam");
-             if (openingBalance < 0) {
-                throw new IllegalArgumentException("Nie mozna wyjąć pieniędzy z konta ujemnego");
 
-             }
-
-             this.balance = openingBalance;
+    public Account(int number, double balance) {
+             //this.number = Objects.requireNonNull(number, "Numer konta nie moze byc cos tam");
+             this.balance = balance;
 
 
     }
 
-    public String getNumber() {
+    public void setNumber() {this.number = number;}
+
+
+    public int getNumber() {
         return number;
     }
-
-    public void deposit(amount) {
-        requirePositive(amount);
-        balance = balance.add(amount);
-
+    public double getBalance() {
+        return balance;
     }
 
-    public void withdraw(amount) {
+    public double deposit(double amount) {
+       if (amount > 0) {
+           this.balance += amount;
+
+       }else {
+            System.out.println("Nie można wpłacić kwoty zerowej bądź ujemnej");
+       }
+        return balance;
+    }
+
+    public double withdraw(double amount) {
         requirePositive(amount);
 
-        if (amount.compareTo(balance) > 0 {
+        if (amount > balance) {
             throw new IllegalArgumentException("Brak srodkow");
         }
 
-        balance = balance.subtract(amount);
+        this.balance -= amount;
+        return balance;
     }
 
-    private void requirePositive(amount) {
+    private void requirePositive(double amount) {
         Objects.requireNonNull(amount, "Kwota nie moze byc jakas tam");
 
-        if (amount.signum() <= 0)
+        if (amount <= 0)
 
             throw new IllegalArgumentException("Kwota musi być dodatnia");
 
         }
     }
 
-}

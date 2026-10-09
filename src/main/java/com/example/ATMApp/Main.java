@@ -17,6 +17,8 @@ public class Main extends JFrame {
     private JButton saldoButton;
     private JButton wplataButton;
 
+        Account loggedAccount = new Account(666, 0);
+
     public Main() {
         setContentPane(MainPanel);
         setTitle("Bankomat");
@@ -27,60 +29,81 @@ public class Main extends JFrame {
         saldoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            //logika
-            }
-        });
+
+            JOptionPane.showMessageDialog(Main.this, "Twoje saldo:  " + loggedAccount.balance + "PLN");
+
+                         }
+            });
+
         wplataButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-            //logika
-            }
-        });
+                                           @Override
+                                           public void actionPerformed(ActionEvent e) {
+
+                                              String input = JOptionPane.showInputDialog(Main.this, "Podaj kwotę do wypłaty:");
+
+
+
+                                               try {
+                                                   double amount = Double.parseDouble(
+                                                           input.trim().replace(',', '.')
+                                                   );
+
+                                                   if (amount <= 0) {
+                                                       throw new IllegalArgumentException("Kwota musi być większa niż 0");
+
+
+                                                   }
+
+                                                       loggedAccount.deposit(amount);
+                                                       JOptionPane.showMessageDialog(Main.this, "Wpłacono: " + amount + "PLN" + "Nowy stan konta: " + loggedAccount.balance + "PLN");
+
+
+                                               } //catch (NumberFormatException ex) {
+
+                                                  // JOptionPane.showMessageDialog(Main.this, "Błąd: musisz podać liczbę");
+                                         //  }
+                                                catch (IllegalArgumentException ex) {
+
+                                                   JOptionPane.showMessageDialog(Main.this, "Operacja odrzucona: " + ex.getMessage());
+
+                                               }
+                                           }
+                                       });
         wyplataButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            //logika
+
+                String input = JOptionPane.showInputDialog(this, "Podaj kwotę do wypłaty: ");
+
+                try {
+                    double amount = Double.parseDouble(input.replace(',', '.'));
+                    if (amount <= 0) {
+                        throw new IllegalArgumentException("Kwota musi być większa od 0");
+
+                    } else if (amount > loggedAccount.balance) {
+                        throw new IllegalArgumentException("Brak wystarczających środków");
+                    }
+                    loggedAccount.withdraw(amount);
+                    JOptionPane.showMessageDialog(
+                            Main.this,
+                            "Wypłacono: " + amount + " PLN\n"
+                                    + "Nowy stan konta: "
+                                    + loggedAccount.balance + " PLN"
+                    );
+
+                } //catch (NumberFormatException ex) {
+                    //JOptionPane.showMessageDialog(Main.this, "Musisz podać liczbę");
+           // }
+                 catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(Main.this, "Operacja odrzucona: " + ex.getMessage());
+
+                }
+
             }
         });
     }
     public static void main(String[] args) {
-        new Main();
-        Scanner scanner = new Scanner(System.in);
-
-        boolean started = true;
-
-        while (started) {
-        showMenu();
-        String sprawdz = scanner.nextLine();
-
-        try {
-        switch(sprawdz)
-        {
-            case "1" -> System.out.println("Saldo: " + "tu zmienna" + "PLN")
-            case "2" ->
-            case "3" ->
-            case "4" ->
-
-        }
-          catch (NumberFormatExpection ex) {
-            System.out.println("Błąd: możesz wpisać tylko kwote");
-          catch (IllegalArgumentExpection ex) {
-            System.out.println("Operacja odrzucona: " + ex.getMessage());
-        }
-
-        scanner.close();
-
+        SwingUtilities.invokeLater(() -> new Main());
     }
 
-        void showMenu() {
-            System.out.println();
-            System.out.println("BANKOMAT");
-            System.out.println("1. Saldo");
-            System.out.println("2. Wpłata");
-            System.out.println("3. Wypłata");
-            System.out.println("4. Wyjście");
-        }
-
-    }
-
-
+}
